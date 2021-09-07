@@ -14,7 +14,7 @@ imap jj <Esc>
 nnoremap <leader>t :below 10sp term://$SHELL<cr>i
 
 nnoremap <leader>fs :w<CR>
- 
+
 " hit <Escape> key to exit from terminal mode
 :tnoremap <Esc> <C-\><C-n>
 
@@ -31,36 +31,36 @@ set wildignore+=**/.git/*
 " VIM PLUG SETUP
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 
 call plug#begin('~/.vim/plugged')
 
-	Plug 'neovim/nvim-lspconfig'
-	Plug 'hrsh7th/nvim-cmp'
-	Plug 'hrsh7th/cmp-nvim-lsp' 
-    Plug 'saadparwaiz1/cmp_luasnip'
-    Plug 'L3MON4D3/LuaSnip'
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'L3MON4D3/LuaSnip'
 
-    Plug 'glepnir/lspsaga.nvim'
+Plug 'glepnir/lspsaga.nvim'
 
-    Plug 'sbdchd/neoformat'
+Plug 'sbdchd/neoformat'
 
-    Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
-	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-	Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-commentary'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
 
-    " EXPLORER
-    Plug 'kyazdani42/nvim-web-devicons' " for file icons
-    Plug 'kyazdani42/nvim-tree.lua'
+" EXPLORER
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 
-    "COLORS
-    Plug 'sainnhe/sonokai'
+"COLORS
+Plug 'sainnhe/sonokai'
 
 call plug#end()
 
@@ -69,19 +69,25 @@ let g:nvim_tree_follow = 1
 
 colorscheme sonokai
 
+
+augroup fmt
+    autocmd!
+    autocmd BufWritePre * undojoin | Neoformat
+augroup END
+
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  ignore_install = {}, -- List of parsers to ignore installing
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
+ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+ignore_install = {}, -- List of parsers to ignore installing
+highlight = {
+enable = true,              -- false will disable the whole extension
+disable = { "c", "rust" },  -- list of language that will be disabled
+-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+-- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+-- Using this option may slow down your editor, and you may see some duplicate highlights.
+-- Instead of true it can also be a list of languages
+additional_vim_regex_highlighting = false,
+},
 }
 require'lspconfig'.tsserver.setup{}
 require'lspconfig'.vimls.setup{}
@@ -102,12 +108,12 @@ local cmp = require 'cmp'
 -- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
-  snippet = {
-    expand = function(args)
-      require('luasnip').lsp_expand(args.body)
+    snippet = {
+        expand = function(args)
+        require('luasnip').lsp_expand(args.body)
     end,
-  },
-  mapping = {
+    },
+mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -115,34 +121,34 @@ cmp.setup {
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
+        behavior = cmp.ConfirmBehavior.Replace,
+        select = true,
+        },
     ['<Tab>'] = function(fallback)
-      if vim.fn.pumvisible() == 1 then
+    if vim.fn.pumvisible() == 1 then
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-n>', true, true, true), 'n')
-      elseif luasnip.expand_or_jumpable() then
+    elseif luasnip.expand_or_jumpable() then
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>luasnip-expand-or-jump', true, true, true), '')
-      else
+    else
         fallback()
-      end
+    end
+end,
+['<S-Tab>'] = function(fallback)
+if vim.fn.pumvisible() == 1 then
+    vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-p>', true, true, true), 'n')
+elseif luasnip.jumpable(-1) then
+    vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>luasnip-jump-prev', true, true, true), '')
+else
+    fallback()
+end
     end,
-    ['<S-Tab>'] = function(fallback)
-      if vim.fn.pumvisible() == 1 then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-p>', true, true, true), 'n')
-      elseif luasnip.jumpable(-1) then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<Plug>luasnip-jump-prev', true, true, true), '')
-      else
-        fallback()
-      end
-    end,
-  },
-  sources = {
+    },
+sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
-  },
+    },
 }
-    
+
 local saga = require 'lspsaga'
 saga.init_lsp_saga()
 
