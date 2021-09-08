@@ -55,19 +55,31 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 
+" Syntax
+Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'jparise/vim-graphql'
+
 " EXPLORER
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 
 "COLORS
 Plug 'sainnhe/sonokai'
+Plug 'dracula/vim', { 'as': 'dracula' }
 
 call plug#end()
+
+" Color fix https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim
+autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 
 " TREE SETUP
 let g:nvim_tree_follow = 1
 
-colorscheme sonokai
+colorscheme dracula
 
 
 augroup fmt
