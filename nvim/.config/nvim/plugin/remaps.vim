@@ -1,5 +1,9 @@
+" Buffers
 nnoremap <leader>bp :bp<CR>
 nnoremap <leader>bn :bn<CR>
+
+" Windows
+nnoremap <leader>wv :vsp<CR>
 
 nnoremap <silent> gh :Lspsaga lsp_finder<CR>
 
@@ -18,3 +22,6 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>si <cmd>Telescope live_grep<cr>
 nnoremap <leader>bi <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Edit
+nnoremap <leader>fed :e ~/.config/nvim/init.vim<CR>

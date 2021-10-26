@@ -1,5 +1,5 @@
 "Git Fugitive
-nnoremap <leader>gs :Git<cr>
+nnoremap <leader>gs :tab Git<cr>
 
 
 

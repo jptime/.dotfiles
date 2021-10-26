@@ -16,4 +16,4 @@ set undofile
 set incsearch
 set termguicolors
 set scrolloff=8
-
+set smartcase

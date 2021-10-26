@@ -38,20 +38,21 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+" LSP Stuff
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'L3MON4D3/LuaSnip'
-
 Plug 'glepnir/lspsaga.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-Plug 'sbdchd/neoformat'
+"Terminal
+Plug 'akinsho/toggleterm.nvim'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 
@@ -62,6 +63,12 @@ Plug 'peitalin/vim-jsx-typescript'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'jparise/vim-graphql'
 
+" Format
+Plug 'sbdchd/neoformat'
+
+"LUALINE
+Plug 'hoob3rt/lualine.nvim'
+
 " EXPLORER
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
@@ -69,8 +76,16 @@ Plug 'kyazdani42/nvim-tree.lua'
 "COLORS
 Plug 'sainnhe/sonokai'
 Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'embark-theme/vim', { 'as': 'embark' }
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'folke/lsp-colors.nvim'
+
+"VimWiki
+Plug 'vimwiki/vimwiki'
+
 
 call plug#end()
+
 
 " Color fix https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
@@ -79,7 +94,7 @@ autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 " TREE SETUP
 let g:nvim_tree_follow = 1
 
-colorscheme dracula
+colorscheme embark
 
 
 augroup fmt
@@ -87,27 +102,6 @@ augroup fmt
     autocmd BufWritePre * undojoin | Neoformat
 augroup END
 
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-ignore_install = {}, -- List of parsers to ignore installing
-highlight = {
-enable = true,              -- false will disable the whole extension
-disable = { "c", "rust" },  -- list of language that will be disabled
--- Setting this to true will run `:h syntax` and tree-sitter at the same time.
--- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
--- Using this option may slow down your editor, and you may see some duplicate highlights.
--- Instead of true it can also be a list of languages
-additional_vim_regex_highlighting = false,
-},
-}
-require'lspconfig'.tsserver.setup{}
-require'lspconfig'.vimls.setup{}
-require'lspconfig'.yamlls.setup{}
-require'lspconfig'.solargraph.setup{}
-require'lspconfig'.gopls.setup{}
-
-EOF
 
 lua <<EOF
 -- Set completeopt to have a better completion experience
@@ -162,6 +156,12 @@ sources = {
 }
 
 local saga = require 'lspsaga'
-saga.init_lsp_saga()
+saga.init_lsp_saga{
+error_sign = '\u{F658}',
+warn_sign = '\u{F071}',
+hint_sign = '\u{F835}',
+}
 
 EOF
+
+
