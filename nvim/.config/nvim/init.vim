@@ -1,6 +1,7 @@
 set encoding=UTF-8
 syntax on
 set number
+set incsearch
 
 set wildmode=longest,list,full
 set wildmenu
@@ -44,14 +45,16 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'L3MON4D3/LuaSnip'
-Plug 'glepnir/lspsaga.nvim'
+Plug 'tami5/lspsaga.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 "Terminal
 Plug 'akinsho/toggleterm.nvim'
 
+" Telescope
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
@@ -66,14 +69,17 @@ Plug 'jparise/vim-graphql'
 " Format
 Plug 'sbdchd/neoformat'
 
-"LUALINE
+" LUALINE
 Plug 'hoob3rt/lualine.nvim'
+
+Plug 'windwp/windline.nvim'
+Plug 'lewis6991/gitsigns.nvim'
 
 " EXPLORER
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 
-"COLORS
+" COLORS
 Plug 'sainnhe/sonokai'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'embark-theme/vim', { 'as': 'embark' }
@@ -83,6 +89,11 @@ Plug 'folke/lsp-colors.nvim'
 "VimWiki
 Plug 'vimwiki/vimwiki'
 
+"Utils
+Plug 'tpope/vim-surround'
+
+Plug 'folke/which-key.nvim'
+Plug 'beauwilliams/focus.nvim'
 
 call plug#end()
 
@@ -91,8 +102,6 @@ call plug#end()
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 
-" TREE SETUP
-let g:nvim_tree_follow = 1
 
 colorscheme embark
 

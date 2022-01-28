@@ -90,9 +90,13 @@ vim.lsp.diagnostic.on_publish_diagnostics, {
         }
     }
 )
+
+require'nvim-tree'.setup {
+    update_focused_file = { enable = true }
+    }
+
 EOF
 
-let g:nvim_tree_auto_close = 1
 
 nnoremap <C-n> :NvimTreeToggle<CR>
 nnoremap <leader>e :NvimTreeToggle<CR>

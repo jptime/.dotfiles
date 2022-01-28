@@ -19,7 +19,9 @@ nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_sag
 
 " TELESCOPE
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>si <cmd>Telescope live_grep<cr>
+nnoremap <leader>sp <cmd>Telescope live_grep<cr>
+nnoremap <leader>si :lua require('telescope.builtin').grep_string { search = vim.fn.expand("<cword>") }<CR>
+
 nnoremap <leader>bi <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
