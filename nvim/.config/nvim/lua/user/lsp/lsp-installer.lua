@@ -18,7 +18,7 @@ lsp_installer.on_server_ready(function(server)
     if server.name == "tsserver" then
       local tsserver_opts = require("user.lsp.settings.tsserver")
       opts = vim.tbl_deep_extend("force", tsserver_opts, opts)
-  end
+    end
 
     if server.name == "sumneko_lua" then
     	local sumneko_opts = require("user.lsp.settings.sumneko_lua")
@@ -30,6 +30,15 @@ lsp_installer.on_server_ready(function(server)
     	opts = vim.tbl_deep_extend("force", solargraph_opts, opts)
     end
 
+    if server.name == "gopls" then
+    local gopls_opts = {}
+    	opts = vim.tbl_deep_extend("force", gopls_opts, opts)
+    end
+
+    if server.name == "golangci_lint" then
+    local golangci_lint_opts = {}
+    	opts = vim.tbl_deep_extend("force", golangci_lint_opts, opts)
+    end
     -- This setup() function is exactly the same as lspconfig's setup function.
     -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     server:setup(opts)

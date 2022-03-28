@@ -69,14 +69,13 @@ null_ls.setup({
 		              autocmd BufWritePost <buffer> lua formatting(vim.fn.expand("<abuf>"))
 		          augroup END
 		          ]])
+		elseif client.resolved_capabilities.document_formatting then
+			vim.cmd([[
+		    augroup LspFormatting
+		        autocmd! * <buffer>
+		        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+		    augroup END
+		    ]])
 		end
-		-- if client.resolved_capabilities.document_formatting then
-		-- 	vim.cmd([[
-		--     augroup LspFormatting
-		--         autocmd! * <buffer>
-		--         autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
-		--     augroup END
-		--     ]])
-		-- end
 	end,
 })
