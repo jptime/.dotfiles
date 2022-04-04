@@ -111,8 +111,6 @@ return packer.startup(function(use)
 	-- Startup Time
 	use("dstein64/vim-startuptime")
 
-	-- Fugitive
-	use("tpope/vim-fugitive")
 
 	use({
 		"folke/lsp-trouble.nvim",
@@ -126,6 +124,9 @@ return packer.startup(function(use)
 		end,
 	})
 
+	-- Fugitive
+	use("tpope/vim-fugitive")
+  
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
 	if PACKER_BOOTSTRAP then
