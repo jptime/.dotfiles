@@ -55,14 +55,23 @@ return packer.startup(function(use)
 	use("antoinemadec/FixCursorHold.nvim") -- This is needed to fix lsp doc highlight
 	use("folke/which-key.nvim")
 
+	--- Statusbar ---- need to pick just one...
 	-- Feline
 	use("feline-nvim/feline.nvim")
 
 	-- ^ For Feline config
 	use("SmiteshP/nvim-gps")
 
+	use({
+		"nvim-lualine/lualine.nvim",
+		requires = { "kyazdani42/nvim-web-devicons", opt = true },
+	})
+	--------------------------
+
 	-- Colorschemes
 	use("lunarvim/colorschemes") -- A bunch of colorschemes you can try out
+	use("folke/tokyonight.nvim")
+
 	-- use "lunarvim/darkplus.nvim"
 
 	-- cmp plugins
@@ -88,6 +97,12 @@ return packer.startup(function(use)
 	use("nvim-telescope/telescope.nvim")
 	use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" })
 
+	-- JS Tools
+	use({
+		"vuki656/package-info.nvim",
+		requires = "MunifTanjim/nui.nvim",
+	})
+
 	-- Treesitter
 	use({
 		"nvim-treesitter/nvim-treesitter",
@@ -101,16 +116,23 @@ return packer.startup(function(use)
 
 	-- Utils
 	use("tpope/vim-surround")
+	use("tpope/vim-dispatch")
 
 	-- VimWiki
 	use("vimwiki/vimwiki")
+
+	-- Ultest
+	use({ "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" })
+
+	-- Nvim Dap
+	use("mfussenegger/nvim-dap")
+	use("Pocco81/DAPInstall.nvim")
 
 	-- Stabilize
 	use("luukvbaal/stabilize.nvim")
 
 	-- Startup Time
 	use("dstein64/vim-startuptime")
-
 
 	use({
 		"folke/lsp-trouble.nvim",
@@ -119,14 +141,13 @@ return packer.startup(function(use)
 			require("trouble").setup({
 				-- your configuration comes here
 				-- or leave it empty to use the default settings
-				-- refer to the configuration section below
 			})
 		end,
 	})
 
 	-- Fugitive
 	use("tpope/vim-fugitive")
-  
+
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
 	if PACKER_BOOTSTRAP then

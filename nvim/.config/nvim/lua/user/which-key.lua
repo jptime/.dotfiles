@@ -159,7 +159,7 @@ local mappings = {
 			"<cmd>Telescope lsp_dynamic_workspace_symbols<cr>",
 			"Workspace Symbols",
 		},
-		f = {
+		F = {
 			"<cmd>lua vim.lsp.diagnostic.open_float()<cr>",
 			"Float Diagnostics",
 		},
@@ -185,6 +185,23 @@ local mappings = {
 		f = { "<cmd>ToggleTerm direction=float<cr>", "Float" },
 		h = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", "Horizontal" },
 		v = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", "Vertical" },
+	},
+	n = {
+		name = "Package Info",
+		-- Show package versions
+		s = { ":lua require('package-info').show()<CR>", "Show package versions" },
+		-- Hide package versions
+		c = { ":lua require('package-info').hide()<CR>", "Hide package versions" },
+		-- Update package on line
+		u = { ":lua require('package-info').update()<CR>", "Update package on line" },
+		-- Delete package on line
+		d = { ":lua require('package-info').delete()<CR>", "Delete package on line" },
+		-- Install a new package
+		i = { ":lua require('package-info').install()<CR>", "Install new package" },
+		-- Reinstall dependencies
+		r = { ":lua require('package-info').reinstall()<CR>", "Reinstall dependences" },
+		-- Install a different package version
+		p = { ":lua require('package-info').change_version()<CR>", "Install a different package version" },
 	},
 }
 
