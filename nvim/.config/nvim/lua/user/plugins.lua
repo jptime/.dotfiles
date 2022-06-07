@@ -48,19 +48,12 @@ return packer.startup(function(use)
 	use("kyazdani42/nvim-web-devicons")
 	use("kyazdani42/nvim-tree.lua")
 	use("moll/vim-bbye")
-	use("akinsho/toggleterm.nvim")
+	-- use("akinsho/toggleterm.nvim")
 	use("ahmedkhalf/project.nvim")
 	use("lewis6991/impatient.nvim")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("antoinemadec/FixCursorHold.nvim") -- This is needed to fix lsp doc highlight
 	use("folke/which-key.nvim")
-
-	--- Statusbar ---- need to pick just one...
-	-- Feline
-	use("feline-nvim/feline.nvim")
-
-	-- ^ For Feline config
-	use("SmiteshP/nvim-gps")
 
 	use({
 		"nvim-lualine/lualine.nvim",
@@ -85,6 +78,7 @@ return packer.startup(function(use)
 	-- snippets
 	use("L3MON4D3/LuaSnip") --snippet engine
 	use("rafamadriz/friendly-snippets") -- a bunch of snippets to use
+	-- use({ "dsznajder/vscode-es7-javascript-react-snippets", run = "yarn install --frozen-lockfile && yarn compile" })
 
 	-- LSP
 	use("neovim/nvim-lspconfig") -- enable LSP

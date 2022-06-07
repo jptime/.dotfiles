@@ -26,4 +26,4 @@
 " nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 "
 " " Edit
-nnoremap <leader>fed :e ~/.config/nvim/init.vim<CR>
+" nnoremap <leader>fed :e ~/.config/nvim/init.vim<CR>
