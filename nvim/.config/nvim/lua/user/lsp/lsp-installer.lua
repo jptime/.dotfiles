@@ -9,6 +9,8 @@ lsp_installer.on_server_ready(function(server)
     local opts = {
       on_attach = require("user.lsp.handlers").on_attach,
       capabilities = require("user.lsp.handlers").capabilities,
+    log_level = vim.log.levels.DEBUG,
+
     }
     if server.name == "jsonls" then 
         local jsonls_opts = require("user.lsp.settings.jsonls")
@@ -18,7 +20,7 @@ lsp_installer.on_server_ready(function(server)
     if server.name == "tsserver" then
       local tsserver_opts = require("user.lsp.settings.tsserver")
       opts = vim.tbl_deep_extend("force", tsserver_opts, opts)
-end
+  end
 
     if server.name == "sumneko_lua" then
     	local sumneko_opts = require("user.lsp.settings.sumneko_lua")
@@ -39,6 +41,26 @@ end
     local golangci_lint_opts = {}
     	opts = vim.tbl_deep_extend("force", golangci_lint_opts, opts)
     end
+
+    if server.name == "clangd" then
+    local clangd_opts = require'lspconfig'.clangd.setup{}
+    	opts = vim.tbl_deep_extend("force", clangd_opts, opts)
+    end
+
+    if server.name == "arduino-language-server" then
+      local MY_FQBN = "esp32:esp32:esp32"
+      lspconfig.arduino_language_server.setup {
+          cmd = {
+              "arduino-language-server",
+              "-cli-config", "/Users/johnpetty/Library/Arduino15/arduino-cli.yaml",
+              "-fqbn", MY_FQBN,
+              "-cli-daemon-addr", "localhost",
+              "-cli-daemon-instance", "1",
+              "-clangd", "/usr/bin/clang"
+          }
+      }
+  end
+  
     -- This setup() function is exactly the same as lspconfig's setup function.
     -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     server:setup(opts)

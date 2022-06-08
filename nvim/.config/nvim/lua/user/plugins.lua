@@ -128,6 +128,24 @@ return packer.startup(function(use)
 	-- Startup Time
 	use("dstein64/vim-startuptime")
 
+	-- Fugitive
+	use("tpope/vim-fugitive")
+
+  -- Arduino
+  use {'stevearc/vim-arduino'}
+
+  -- Zen Mode
+  use {
+    "folke/zen-mode.nvim",
+    config = function()
+      require("zen-mode").setup {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      }
+    end
+  }
+
 	use({
 		"folke/lsp-trouble.nvim",
 		requires = "kyazdani42/nvim-web-devicons",
@@ -138,9 +156,6 @@ return packer.startup(function(use)
 			})
 		end,
 	})
-
-	-- Fugitive
-	use("tpope/vim-fugitive")
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins
