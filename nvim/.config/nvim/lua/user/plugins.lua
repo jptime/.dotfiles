@@ -119,8 +119,8 @@ return packer.startup(function(use)
 	use({ "rcarriga/vim-ultest", requires = { "vim-test/vim-test" }, run = ":UpdateRemotePlugins" })
 
 	-- Nvim Dap
-	use("mfussenegger/nvim-dap")
-	use("Pocco81/DAPInstall.nvim")
+	-- use("mfussenegger/nvim-dap")
+	-- use("Pocco81/DAPInstall.nvim")
 
 	-- Stabilize
 	use("luukvbaal/stabilize.nvim")
