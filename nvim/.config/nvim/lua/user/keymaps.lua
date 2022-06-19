@@ -32,3 +32,9 @@ keymap("i", "jk", "<ESC>", opts)
 -- Stay in indent mode
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
+
+-- Trouble Remaps
+keymap("n", "gr", "<cmd>Trouble lsp_references<cr>", opts)
+keymap("n", "gd", "<cmd>Trouble lsp_definitions<cr>", opts)
+keymap("n", "gi", "<cmd>Trouble lsp_implementations<cr>", opts)
+keymap("n", "gD", "<cmd>Trouble lsp_type_definitions<cr>", opts)

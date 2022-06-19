@@ -8,17 +8,20 @@ end
 
 -- Alternatively, you may also register handlers on specific server instances instead (see example below).
 
--- require'lspconfig'.arduino_language_server.setup{
---     -- MY_FQBN = "esp32:esp32:esp32"
---       cmd = {
---         "arduino-language-server",
---         "-cli-config", "/Users/johnpetty/.arduinoIDE/arduino-cli.yaml",
---         "-cli-daemon-instance", "1",
---         "-cli-daemon-addr", "localhost:50051",
---         "-clangd", "/usr/bin/clang",
---         -- "-fqbn", MY_FQBN
---       }
--- }
+-- Arduino-Ide LspInstaller issue - Not passing the config down
+require 'lspconfig'.arduino_language_server.setup({
+  cmd = {
+    -- "/Applications/Arduino IDE.app/Contents/Resources/app/node_modules/arduino-ide-extension/build/arduino-language-server",
+    "arduino-language-server",
+    "-cli", "arduino-cli",
+    "-cli-config", "/Users/johnpetty/.arduinoIDE/arduino-cli.yaml",
+    "-cli-daemon-instance", "1",
+    "-cli-daemon-addr", "localhost:50051",
+    -- "-clangd", "/Applications/Arduino IDE.app/Contents/Resources/app/node_modules/arduino-ide-extension/build/clangd",
+    "-clangd", "/usr/bin/clangd",
+    "-fqbn", "esp32:esp32:esp32",
+  }
+})
 
 lsp_installer.on_server_ready(function(server)
   local opts = {
@@ -34,7 +37,6 @@ lsp_installer.on_server_ready(function(server)
     local jsonls_opts = require("user.lsp.settings.jsonls")
     opts = vim.tbl_deep_extend("force", jsonls_opts, opts)
   end
-
   if server.name == "tsserver" then
     local tsserver_opts = require("user.lsp.settings.tsserver")
     opts = vim.tbl_deep_extend("force", tsserver_opts, opts)
@@ -65,20 +67,20 @@ lsp_installer.on_server_ready(function(server)
     opts = vim.tbl_deep_extend("force", clangd_opts, opts)
   end
 
-  if server.name == "arduino-language-server" then
-    local MY_FQBN = "esp32:esp32:esp32"
-    local arduino_opts = require 'lspconfig'.arduino_language_server.setup({
-      cmd = {
-        "arduino-language-server",
-        "-cli-config", "/Users/johnpetty/.arduinoIDE/arduino-cli.yaml",
-        "-cli-daemon-instance", "1",
-        "-cli-daemon-addr", "localhost:50051",
-        "-clangd", "/usr/bin/clang",
-        "-fqbn", MY_FQBN
-      }
-    })
-    opts = vim.tbl_deep_extend("force", arduino_opts, opts)
-  end
+  -- if server.name == "arduino-language-server" then
+  --   local MY_FQBN = "esp32:esp32:esp32"
+  --   local arduino_opts = require 'lspconfig'.arduino_language_server.setup({
+  --     cmd = {
+  --       "/Applications/Arduino IDE.app/Contents/Resources/app/node_modules/arduino-ide-extension/build/arduino-language-server",
+  --       "-cli-config", "/Users/johnpetty/.arduinoIDE/arduino-cli.yaml",
+  --       "-cli-daemon-instance", "1",
+  --       "-cli-daemon-addr", "localhost:50051",
+  --       "-clangd", "/Applications/Arduino IDE.app/Contents/Resources/app/node_modules/arduino-ide-extension/build/clangd",
+  --       "-fqbn", MY_FQBN
+  --     }
+  --   })
+  --   opts = vim.tbl_deep_extend("force", arduino_opts, opts)
+  -- end
 
   -- This setup() function is exactly the same as lspconfig's setup function.
 
