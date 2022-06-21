@@ -1,4 +1,4 @@
-local get_color = require 'lualine.utils.utils'.extract_highlight_colors
+jklocal get_color = require 'lualine.utils.utils'.extract_highlight_colors
 
 local function diff_source()
   local gitsigns = vim.b.gitsigns_status_dict
@@ -17,7 +17,7 @@ require("lualine").setup({
     theme = "tokyonight",
   },
   sections = {
-    lualine_a = { { 'mode', fmt = string.lower } },
+    lualine_a = { { 'mode', fmt = string.upper } },
     lualine_b = {},
     lualine_c = { { 'b:gitsigns_head', icon = '' }, { 'diff', icon = '', source = diff_source }, {
       'lsp_progress',
@@ -25,7 +25,15 @@ require("lualine").setup({
       spinner_symbols = { '⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏' },
     }
     },
-    lualine_x = { 'filetype' },
+    lualine_x = {
+      -- {'buffers', show_filename_only = false},
+      {
+        'filename',
+        file_status = true,
+        path = 1,
+        shorting_target = 40,
+      },
+      'filetype' },
     lualine_y = {},
     lualine_z = { {
       'diagnostics',

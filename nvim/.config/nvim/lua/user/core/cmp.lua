@@ -1,136 +1,3 @@
--- local cmp_status_ok, cmp = pcall(require, "cmp")
--- if not cmp_status_ok then
--- 	return
--- end
---
--- local snip_status_ok, luasnip = pcall(require, "luasnip")
--- if not snip_status_ok then
--- 	return
--- end
---
--- -- require("luasnip/loaders/from_vscode").lazy_load()
--- require("luasnip").filetype_extend("ruby", { "rails" })
--- require("luasnip").filetype_extend("javascript", { "javascriptreact" })
---
--- local check_backspace = function()
--- 	local col = vim.fn.col(".") - 1
--- 	return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
--- end
---
--- --   פּ ﯟ   some other good icons
--- local kind_icons = {
--- 	Text = "",
--- 	Method = "m",
--- 	Function = "",
--- 	Constructor = "",
--- 	Field = "",
--- 	Variable = "",
--- 	Class = "",
--- 	Interface = "",
--- 	Module = "",
--- 	Property = "",
--- 	Unit = "",
--- 	Value = "",
--- 	Enum = "",
--- 	Keyword = "",
--- 	Snippet = "",
--- 	Color = "",
--- 	File = "",
--- 	Reference = "",
--- 	Folder = "",
--- 	EnumMember = "",
--- 	Constant = "",
--- 	Struct = "",
--- 	Event = "",
--- 	Operator = "",
--- 	TypeParameter = "",
--- }
--- -- find more here: https://www.nerdfonts.com/cheat-sheet
---
--- cmp.setup({
--- 	snippet = {
--- 		expand = function(args)
--- 			luasnip.lsp_expand(args.body) -- For `luasnip` users.
--- 		end,
--- 	},
--- 	mapping = {
--- 		["<C-k>"] = cmp.mapping.select_prev_item(),
--- 		["<C-j>"] = cmp.mapping.select_next_item(),
--- 		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
--- 		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
--- 		["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
--- 		["<C-y>"] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
--- 		["<C-e>"] = cmp.mapping({
--- 			i = cmp.mapping.abort(),
--- 			c = cmp.mapping.close(),
--- 		}),
--- 		-- Accept currently selected item. If none selected, `select` first item.
--- 		-- Set `select` to `false` to only confirm explicitly selected items.
--- 		["<CR>"] = cmp.mapping.confirm({ select = true }),
--- 		["<Tab>"] = cmp.mapping(function(fallback)
--- 			if cmp.visible() then
--- 				cmp.select_next_item()
--- 			elseif luasnip.expandable() then
--- 				luasnip.expand()
--- 			elseif luasnip.expand_or_jumpable() then
--- 				luasnip.expand_or_jump()
--- 			elseif check_backspace() then
--- 				fallback()
--- 			else
--- 				fallback()
--- 			end
--- 		end, {
--- 			"i",
--- 			"s",
--- 		}),
--- 		["<S-Tab>"] = cmp.mapping(function(fallback)
--- 			if cmp.visible() then
--- 				cmp.select_prev_item()
--- 			elseif luasnip.jumpable(-1) then
--- 				luasnip.jump(-1)
--- 			else
--- 				fallback()
--- 			end
--- 		end, {
--- 			"i",
--- 			"s",
--- 		}),
--- 	},
--- 	formatting = {
--- 		fields = { "kind", "abbr", "menu" },
--- 		format = function(entry, vim_item)
--- 			-- Kind icons
--- 			vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
--- 			-- vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
--- 			vim_item.menu = ({
--- 				nvim_lsp = "[LSP]",
--- 				luasnip = "[Snippet]",
--- 				path = "[Path]",
--- 				buffer = "[Buffer]",
--- 			})[entry.source.name]
--- 			return vim_item
--- 		end,
--- 	},
--- 	sources = {
--- 		{ name = "nvim_lsp" },
--- 		{ name = "luasnip" },
--- 		{ name = "path" },
--- 		{ name = "buffer" },
--- 	},
--- 	confirm_opts = {
--- 		behavior = cmp.ConfirmBehavior.Replace,
--- 		select = false,
--- 	},
--- 	window = {
--- 		documentation = {
--- 			border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
--- 		},
--- 	},
--- 	experimental = {
--- 		ghost_text = false,
--- 		native_menu = false,
--- 	},
--- })
 local M = {}
 M.methods = {}
 
@@ -288,7 +155,7 @@ M.config = function()
     return
   end
 
-  lvim.builtin.cmp = {
+  user.builtin.cmp = {
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,
       select = false,
@@ -350,16 +217,16 @@ M.config = function()
       },
       duplicates_default = 0,
       format = function(entry, vim_item)
-        local max_width = lvim.builtin.cmp.formatting.max_width
+        local max_width = user.builtin.cmp.formatting.max_width
         if max_width ~= 0 and #vim_item.abbr > max_width then
           vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. "…"
         end
-        if lvim.use_icons then
-          vim_item.kind = lvim.builtin.cmp.formatting.kind_icons[vim_item.kind]
+        if user.use_icons then
+          vim_item.kind = user.builtin.cmp.formatting.kind_icons[vim_item.kind]
         end
-        vim_item.menu = lvim.builtin.cmp.formatting.source_names[entry.source.name]
-        vim_item.dup = lvim.builtin.cmp.formatting.duplicates[entry.source.name]
-          or lvim.builtin.cmp.formatting.duplicates_default
+        vim_item.menu = user.builtin.cmp.formatting.source_names[entry.source.name]
+        vim_item.dup = user.builtin.cmp.formatting.duplicates[entry.source.name]
+          or user.builtin.cmp.formatting.duplicates_default
         return vim_item
       end,
     },
@@ -425,7 +292,7 @@ M.config = function()
       ["<C-Space>"] = cmp.mapping.complete(),
       ["<C-e>"] = cmp.mapping.abort(),
       ["<CR>"] = cmp.mapping(function(fallback)
-        if cmp.visible() and cmp.confirm(lvim.builtin.cmp.confirm_opts) then
+        if cmp.visible() and cmp.confirm(user.builtin.cmp.confirm_opts) then
           if jumpable() then
             luasnip.jump(1)
           end
@@ -445,7 +312,7 @@ M.config = function()
 end
 
 function M.setup()
-  require("cmp").setup(lvim.builtin.cmp)
+  require("cmp").setup(user.builtin.cmp)
 end
 
 return M

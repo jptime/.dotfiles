@@ -1,188 +1,258 @@
-local fn = vim.fn
+local core_plugins = {
+  -- Packer can manage itself as an optional plugin
+  { "wbthomason/packer.nvim" },
+  { "neovim/nvim-lspconfig" },
+  { "tamago324/nlsp-settings.nvim" },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+  },
+  { "antoinemadec/FixCursorHold.nvim" }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
+  {
+    "williamboman/nvim-lsp-installer",
+  },
+  {
+    "lunarvim/onedarker.nvim",
+    config = function()
+      pcall(function()
+        if user and user.colorscheme == "onedarker" then
+          require("onedarker").setup()
+          user.builtin.lualine.options.theme = "onedarker"
+        end
+      end)
+    end,
+    disable = user.colorscheme ~= "onedarker",
+  },
+  {
+    "rcarriga/nvim-notify",
+    config = function()
+      require("user.core.notify").setup()
+    end,
+    requires = { "nvim-telescope/telescope.nvim" },
+    disable = not user.builtin.notify.active or not user.builtin.telescope.active,
+  },
+  { "Tastyep/structlog.nvim" },
 
--- Automatically install packer
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-if fn.empty(fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = fn.system({
-    "git",
-    "clone",
-    "--depth",
-    "1",
-    "https://github.com/wbthomason/packer.nvim",
-    install_path,
-  })
-  print("Installing packer close and reopen Neovim...")
-  vim.cmd([[packadd packer.nvim]])
-end
-
--- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]])
-
--- Use a protected call so we don't error out on first use
-local status_ok, packer = pcall(require, "packer")
-if not status_ok then
-  return
-end
-
--- Have packer use a popup window
-packer.init({
-  display = {
-    open_fn = function()
-      return require("packer.util").float({ border = "rounded" })
+  { "nvim-lua/popup.nvim" },
+  { "nvim-lua/plenary.nvim" },
+  -- Telescope
+  {
+    "nvim-telescope/telescope.nvim",
+    config = function()
+      require("user.core.telescope").setup()
+    end,
+    disable = not user.builtin.telescope.active,
+  },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    requires = { "nvim-telescope/telescope.nvim" },
+    run = "make",
+    disable = not user.builtin.telescope.active,
+  },
+  -- Install nvim-cmp, and buffer source as a dependency
+  {
+    "hrsh7th/nvim-cmp",
+    config = function()
+      if user.builtin.cmp then
+        require("user.core.cmp").setup()
+      end
+    end,
+    requires = {
+      "L3MON4D3/LuaSnip",
+      "rafamadriz/friendly-snippets",
+    },
+  },
+  {
+    "rafamadriz/friendly-snippets",
+  },
+  {
+    "L3MON4D3/LuaSnip",
+    config = function()
+      local utils = require "user.utils"
+      local paths = {
+        utils.join_paths(get_runtime_dir(), "site", "pack", "packer", "start", "friendly-snippets"),
+      }
+      local user_snippets = utils.join_paths(get_config_dir(), "snippets")
+      if utils.is_directory(user_snippets) then
+        paths[#paths + 1] = user_snippets
+      end
+      require("luasnip.loaders.from_lua").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load {
+        paths = paths,
+      }
+      require("luasnip.loaders.from_snipmate").lazy_load()
     end,
   },
-})
+  {
+    "hrsh7th/cmp-nvim-lsp",
+  },
+  {
+    "saadparwaiz1/cmp_luasnip",
+  },
+  {
+    "hrsh7th/cmp-buffer",
+  },
+  {
+    "hrsh7th/cmp-path",
+  },
+  {
+    -- NOTE: Temporary fix till folke comes back
+    "max397574/lua-dev.nvim",
+    module = "lua-dev",
+  },
 
--- Install your plugins here
-return packer.startup(function(use)
-  use("wbthomason/packer.nvim") -- Have packer manage itself
-  use("nvim-lua/popup.nvim") -- An implementation of the Popup API from vim in Neovim
-  use("nvim-lua/plenary.nvim") -- Useful lua functions used ny lots of plugins
-  use("windwp/nvim-autopairs") -- Autopairs, integrates with both cmp and treesitter
-  use("numToStr/Comment.nvim") -- Easily comment stuff
-  use("kyazdani42/nvim-web-devicons")
-  use("kyazdani42/nvim-tree.lua")
-  use("moll/vim-bbye")
-  -- use("akinsho/toggleterm.nvim")
-  use("ahmedkhalf/project.nvim")
-  use("lewis6991/impatient.nvim")
-  use("lukas-reineke/indent-blankline.nvim")
-  use("antoinemadec/FixCursorHold.nvim") -- This is needed to fix lsp doc highlight
-  use("folke/which-key.nvim")
-
-  use({
-    "nvim-lualine/lualine.nvim",
-    requires = { "kyazdani42/nvim-web-devicons", opt = true },
-  })
-  --------------------------
-
-  -- Colorschemes
-  use("lunarvim/colorschemes") -- A bunch of colorschemes you can try out
-  use("folke/tokyonight.nvim")
-
-  -- use "lunarvim/darkplus.nvim"
-
-  -- cmp plugins
-  use("hrsh7th/nvim-cmp") -- The completion plugin
-  use("hrsh7th/cmp-buffer") -- buffer completions
-  use("hrsh7th/cmp-path") -- path completions
-  use("hrsh7th/cmp-cmdline") -- cmdline completions
-  use("saadparwaiz1/cmp_luasnip") -- snippet completions
-  use("hrsh7th/cmp-nvim-lsp")
-
-  -- snippets
-  use("L3MON4D3/LuaSnip") --snippet engine
-  use("rafamadriz/friendly-snippets") -- a bunch of snippets to use
-  -- use({ "dsznajder/vscode-es7-javascript-react-snippets", run = "yarn install --frozen-lockfile && yarn compile" })
-
-  -- LSP
-  use("neovim/nvim-lspconfig") -- enable LSP
-  use("williamboman/nvim-lsp-installer") -- simple to use language server installer
-  use("tamago324/nlsp-settings.nvim") -- language server settings defined in json for
-  use("jose-elias-alvarez/null-ls.nvim") -- for formatters and linters
-  use("jose-elias-alvarez/nvim-lsp-ts-utils") -- for formatters and linters
-
-  -- Telescope
-  use {
-    "nvim-telescope/telescope.nvim",
-    requires = {
-      { "nvim-telescope/telescope-live-grep-args.nvim" }
-    }
-  }
-  use { 'nvim-telescope/telescope-fzf-native.nvim',
-    run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-  }
-
-  -- JS Tools
-  use({
-    "vuki656/package-info.nvim",
-    requires = "MunifTanjim/nui.nvim",
-  })
+  -- Autopairs
+  {
+    "windwp/nvim-autopairs",
+    -- event = "InsertEnter",
+    config = function()
+      require("user.core.autopairs").setup()
+    end,
+    disable = not user.builtin.autopairs.active,
+  },
 
   -- Treesitter
-  use({
+  {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
-  })
-  use("JoosepAlviste/nvim-ts-context-commentstring")
-  use("windwp/nvim-ts-autotag")
-
-  -- Git
-  use("lewis6991/gitsigns.nvim")
-
-  -- Utils
-  use("tpope/vim-surround")
-  use("tpope/vim-dispatch")
-
-  -- VimWiki
-  use("vimwiki/vimwiki")
-
-  -- NeoTest
-  use {
-    "nvim-neotest/neotest",
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "antoinemadec/FixCursorHold.nvim",
-      'olimorris/neotest-rspec',
-      'haydenmeade/neotest-jest',
-    },
+    -- run = ":TSUpdate",
     config = function()
-      require('neotest').setup({
-        adapters = {
-          require('neotest-rspec'),
-          require('neotest-jest'),
-        }
-      })
-    end
-  }
-  -- Nvim Dap
-  -- use("mfussenegger/nvim-dap")
-  -- use("Pocco81/DAPInstall.nvim")
-
-  -- Stabilize
-  use("luukvbaal/stabilize.nvim")
-
-  -- Startup Time
-  use("dstein64/vim-startuptime")
-
-  -- Fugitive
-  use("tpope/vim-fugitive")
-
-  -- Arduino
-  use { 'stevearc/vim-arduino' }
-
-  -- Zen Mode
-  use {
-    "folke/zen-mode.nvim",
-    config = function()
-      require("zen-mode").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    end
-  }
-
-  use({
-    "folke/lsp-trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
-    config = function()
-      require("trouble").setup({
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-      })
+      require("user.core.treesitter").setup()
     end,
-  })
+  },
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    event = "BufReadPost",
+  },
 
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if PACKER_BOOTSTRAP then
-    require("packer").sync()
+  -- NvimTree
+  {
+    "kyazdani42/nvim-tree.lua",
+    -- event = "BufWinOpen",
+    -- cmd = "NvimTreeToggle",
+    config = function()
+      require("user.core.nvimtree").setup()
+    end,
+    disable = not user.builtin.nvimtree.active,
+  },
+
+  {
+    "tpope/vim-fugitive"
+  },
+
+  {
+    "lewis6991/gitsigns.nvim",
+
+    config = function()
+      require("user.core.gitsigns").setup()
+    end,
+    event = "BufRead",
+    disable = not user.builtin.gitsigns.active,
+  },
+
+  -- Whichkey
+  {
+    "max397574/which-key.nvim",
+    config = function()
+      require("user.core.which-key").setup()
+    end,
+    event = "BufWinEnter",
+    disable = not user.builtin.which_key.active,
+  },
+
+  -- Comments
+  {
+    "numToStr/Comment.nvim",
+    event = "BufRead",
+    config = function()
+      require("user.core.comment").setup()
+    end,
+    disable = not user.builtin.comment.active,
+  },
+
+  -- project.nvim
+  {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("user.core.project").setup()
+    end,
+    disable = not user.builtin.project.active,
+  },
+
+  -- Icons
+  {
+    "kyazdani42/nvim-web-devicons",
+    disable = not user.use_icons,
+  },
+
+  -- Status Line and Bufferline
+  {
+    -- "hoob3rt/lualine.nvim",
+    "nvim-lualine/lualine.nvim",
+    -- "Lunarvim/lualine.nvim",
+    config = function()
+      require("user.core.lualine").setup()
+    end,
+    disable = not user.builtin.lualine.active,
+  },
+
+  {
+    "akinsho/bufferline.nvim",
+    config = function()
+      require("user.core.bufferline").setup()
+    end,
+    branch = "main",
+    event = "BufWinEnter",
+    disable = not user.builtin.bufferline.active,
+  },
+
+  -- Debugging
+  {
+    "mfussenegger/nvim-dap",
+    -- event = "BufWinEnter",
+    config = function()
+      require("user.core.dap").setup()
+    end,
+    disable = not user.builtin.dap.active,
+  },
+
+  -- Debugger management
+  {
+    "Pocco81/dap-buddy.nvim",
+    branch = "dev",
+    -- event = "BufWinEnter",
+    -- event = "BufRead",
+    disable = not user.builtin.dap.active,
+  },
+
+  -- alpha
+  -- {
+  --   "goolord/alpha-nvim",
+  --   config = function()
+  --     require("user.core.alpha").setup()
+  --   end,
+  --   disable = not user.builtin.alpha.active,
+  -- },
+
+  -- Terminal
+  {
+    "akinsho/toggleterm.nvim",
+    event = "BufWinEnter",
+    branch = "main",
+    config = function()
+      require("user.core.terminal").setup()
+    end,
+    disable = not user.builtin.terminal.active,
+  },
+
+  -- SchemaStore
+  {
+    "b0o/schemastore.nvim",
+  },
+}
+
+for _, entry in ipairs(core_plugins) do
+  if not os.getenv "LVIM_DEV_MODE" then
+    entry["lock"] = true
   end
-end)
+end
+
+return core_plugins

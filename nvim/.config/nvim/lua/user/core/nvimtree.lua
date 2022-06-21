@@ -2,6 +2,7 @@ local M = {}
 local Log = require "user.core.log"
 
 function M.config()
+  local vim_show_icons = user.use_icons and 1 or 0
   user.builtin.nvimtree = {
     active = true,
     on_config_done = nil,
@@ -75,35 +76,7 @@ function M.config()
         },
         icons = {
           webdev_colors = user.use_icons,
-          show = {
-            git = user.use_icons,
-            folder = user.use_icons,
-            file = user.use_icons,
-            folder_arrow = user.use_icons,
-          },
-          glyphs = {
-            default = "",
-            symlink = "",
-            git = {
-              unstaged = "",
-              staged = "S",
-              unmerged = "",
-              renamed = "➜",
-              deleted = "",
-              untracked = "U",
-              ignored = "◌",
-            },
-            folder = {
-              default = "",
-              open = "",
-              empty = "",
-              empty_open = "",
-              symlink = "",
-            },
-          },
         },
-        highlight_git = true,
-        root_folder_modifier = ":t",
       },
       filters = {
         dotfiles = false,
@@ -147,6 +120,34 @@ function M.config()
         },
       },
     },
+    show_icons = {
+      git = vim_show_icons,
+      folders = vim_show_icons,
+      files = vim_show_icons,
+      folder_arrows = vim_show_icons,
+    },
+    git_hl = 1,
+    root_folder_modifier = ":t",
+    icons = {
+      default = "",
+      symlink = "",
+      git = {
+        unstaged = "",
+        staged = "S",
+        unmerged = "",
+        renamed = "➜",
+        deleted = "",
+        untracked = "U",
+        ignored = "◌",
+      },
+      folder = {
+        default = "",
+        open = "",
+        empty = "",
+        empty_open = "",
+        symlink = "",
+      },
+    },
   }
   user.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
 end
@@ -158,16 +159,13 @@ function M.setup()
     return
   end
 
-  if user.builtin.nvimtree._setup_called then
-    Log:debug "ignoring repeated setup call for nvim-tree, see kyazdani42/nvim-tree.lua#1308"
-    return
+  for opt, val in pairs(user.builtin.nvimtree) do
+    vim.g["nvim_tree_" .. opt] = val
   end
-
-  user.builtin.nvimtree._setup_called = true
 
   -- Implicitly update nvim-tree when project module is active
   if user.builtin.project.active then
-    user.builtin.nvimtree.setup.respect_buf_cwd = true
+    user.builtin.nvimtree.respect_buf_cwd = 1
     user.builtin.nvimtree.setup.update_cwd = true
     user.builtin.nvimtree.setup.update_focused_file = { enable = true, update_cwd = true }
   end
@@ -175,7 +173,6 @@ function M.setup()
   local function telescope_find_files(_)
     require("user.core.nvimtree").start_telescope "find_files"
   end
-
   local function telescope_live_grep(_)
     require("user.core.nvimtree").start_telescope "live_grep"
   end
