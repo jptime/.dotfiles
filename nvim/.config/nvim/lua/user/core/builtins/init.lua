@@ -13,8 +13,8 @@ local builtinPair = {
   "user.core.bufferline",
   "user.core.dap",
   "user.core.terminal",
+  "user.core.cmp",
 }
---  "user.core.cmp",
 --  "user.core.terminal",
 
 function M.config(config)
